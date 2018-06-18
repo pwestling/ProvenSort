@@ -16,7 +16,7 @@ data TotalOrder : (a : Type) -> (f : a -> a -> Type) -> Type where
         -- (antisym : (f x y) -> (f y x) -> x = y) ->
         (connex : ((x : a) -> (y : a) -> OneOrBoth (f x y) (f y x))) ->
             TotalOrder a f
-
+           
 data IsSorted : (to : TotalOrder a f) -> List a -> Type where
     SortNil : IsSorted to []
     SortOne : (x : a) -> IsSorted to [x]

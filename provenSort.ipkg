@@ -1,0 +1,9 @@
+package provenSort
+
+modules = Forall, Sorted, Permutation, ProvenInsSort, ProvenSorts
+sourcedir = src
+
+opts = "-p effects"
+
+main = ProvenSorts
+executable = provenSorts

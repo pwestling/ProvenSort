@@ -5,12 +5,12 @@ import Sorted
 import Permutation
 import Forall
 
-
 tailIsSorted : {f : a -> a -> Type} -> {to : TotalOrder a f} -> (prf : f x y) -> 
     Dec (IsSorted to (y :: xs)) -> Dec (IsSorted to (x :: (y :: xs)))
 tailIsSorted {x} prf (Yes prfTail) = Yes $ SortCons x prf prfTail
 tailIsSorted prf (No contra) = No $ notSortedTailNotSorted contra
 
+export
 total isSorted : (to : TotalOrder a f) -> (l : List a) -> Dec (IsSorted to l)
 isSorted (OrderFn t connex)  [] = Yes SortNil
 isSorted (OrderFn t connex)  (x :: []) = Yes (SortOne x)
@@ -20,7 +20,7 @@ isSorted {f} (OrderFn t connex) (x :: (y :: xs)) =
         (Both prf ignore) => tailIsSorted prf (isSorted _ _)
         (TheOther prf contra) => No (notSortedHeadNotSorted contra)
 
-total proveInsertion : (to : TotalOrder a f) -> (permPrf : Permutation (x :: ys) insertResult) -> (resultSortPrf : IsSorted to insertResult) -> (subSortPrf : IsSorted to (y :: ys)) -> (prf : f y x) -> (result : List a ** (Permutation (x :: (y :: ys)) result, IsSorted to result))
+total proveInsertion : {insertResult : List a} -> {y : a} -> (to : TotalOrder a f) -> (permPrf : Permutation (x :: ys) insertResult) -> (resultSortPrf : IsSorted to insertResult) -> (subSortPrf : IsSorted to (y :: ys)) -> (prf : f y x) -> (result : List a ** (Permutation (x :: (y :: ys)) result, IsSorted to result))
 proveInsertion {insertResult = []} {x} {y} to permPrf resultSortPrf subSortPrf prf = absurd $ permEmptyNotEmptyAbsurd permPrf
 proveInsertion {insertResult = r :: rs} {x} {y} to permPrf resultSortPrf subSortPrf prf =
     let yLTys = lteForAllWhenSorted subSortPrf in
@@ -45,4 +45,6 @@ insSortProven to (x :: xs) = let (subSort ** (permPrf, srtPrf)) = insSortProven 
     let (resultList ** (resultPrf,resultSrtPrf)) = insSortInsert to x subSort srtPrf in
         let helper = permuteHead {x = x} permPrf in
           (resultList ** ((permuteTrans helper resultPrf),resultSrtPrf))
-
+export          
+total insSort : (to :TotalOrder a f) -> (input : List a) -> List a
+insSort to l = fst (insSortProven to l)

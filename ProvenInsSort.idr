@@ -44,5 +44,5 @@ insSortProven to [] = ([] ** (PSame, SortNil))
 insSortProven to (x :: xs) = let (subSort ** (permPrf, srtPrf)) = insSortProven to xs in
     let (resultList ** (resultPrf,resultSrtPrf)) = insSortInsert to x subSort srtPrf in
         let helper = permuteHead {x = x} permPrf in
-          (resultList ** ((PTrans helper resultPrf),resultSrtPrf))
+          (resultList ** ((permuteTrans helper resultPrf),resultSrtPrf))
 

@@ -5,16 +5,16 @@ import Sorted
 import Permutation
 import Forall
 
-mutual
-  tailIsSorted : {f : a -> a -> Type} -> {to : TotalOrder a f} -> (prf : f x y) -> 
-    Dec (IsSorted to (y :: xs)) -> Dec (IsSorted to (x :: (y :: xs)))
-  tailIsSorted {x} prf (Yes prfTail) = Yes $ SortCons x prf prfTail
-  tailIsSorted prf (No contra) = No $ notSortedTailNotSorted contra
 
-  total isSorted : (to : TotalOrder a f) -> (l : List a) -> Dec (IsSorted to l)
-  isSorted (OrderFn t connex)  [] = Yes SortNil
-  isSorted (OrderFn t connex)  (x :: []) = Yes (SortOne x)
-  isSorted {f} (OrderFn t connex) (x :: (y :: xs)) = 
+tailIsSorted : {f : a -> a -> Type} -> {to : TotalOrder a f} -> (prf : f x y) -> 
+    Dec (IsSorted to (y :: xs)) -> Dec (IsSorted to (x :: (y :: xs)))
+tailIsSorted {x} prf (Yes prfTail) = Yes $ SortCons x prf prfTail
+tailIsSorted prf (No contra) = No $ notSortedTailNotSorted contra
+
+total isSorted : (to : TotalOrder a f) -> (l : List a) -> Dec (IsSorted to l)
+isSorted (OrderFn t connex)  [] = Yes SortNil
+isSorted (OrderFn t connex)  (x :: []) = Yes (SortOne x)
+isSorted {f} (OrderFn t connex) (x :: (y :: xs)) = 
     case (connex x y) of
         (One prf contra) => tailIsSorted prf (isSorted _ _)
         (Both prf ignore) => tailIsSorted prf (isSorted _ _)

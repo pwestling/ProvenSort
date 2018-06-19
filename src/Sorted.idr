@@ -10,6 +10,12 @@ data OneOrBoth : p -> q -> Type where
     TheOther : q -> (p -> Void) -> OneOrBoth p q
     Both : p -> q -> OneOrBoth p q
 
+syntax owoto [oneorbothtest] "of" one {prf} "=>" [onecase] theother {prf} {contra} "=>" [othercase] = 
+    case oneorbothtest of
+        (One prf contra) => onecase
+        (Both prf prf2) => onecase
+        (TheOther prf contra) => othercase
+
 data TotalOrder : (a : Type) -> (f : a -> a -> Type) -> Type where
     OrderFn : {a : Type} -> {f : a -> a -> Type } -> 
         (transitive : (x :a) -> (y : a) -> (z : a) -> f x y -> f y z -> f x z) ->

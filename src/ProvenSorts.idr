@@ -3,6 +3,8 @@ module Main
 import ProvenInsSort
 import Sorted
 
+myEfficientLookup : (UComparator a n) -> Vect n a
+
 
 main : IO ()
 main = do
